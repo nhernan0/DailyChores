@@ -46,6 +46,14 @@ const chores = [
   { id: 14, title: 'Pick Up Toys at end of Day', pts: 10 }
 ];
 
+  const penalties = [
+  { id: 101, title: 'Talking Back', pts: 5 },
+  { id: 102, title: 'Fighting', pts: 5 },
+  { id: 103, title: 'Hitting or Throwing Items', pts: 5 },
+  { id: 104, title: 'Not listening', pts: 5 },  
+  { id: 105, title: 'Incomplete Daily Chores', pts: 5 }
+];
+
 let currentUser = '';
 
 function setUser(name) {
@@ -81,10 +89,13 @@ function checkDate() {
 
 function render() {
   const doneList = JSON.parse(localStorage.getItem(`doneList_${currentUser}`) || '[]');
+  const penaltyList = JSON.parse(localStorage.getItem(`penaltyList_${currentUser}`) || '[]'); // New
   const listDiv = document.getElementById('chore-list');
-  listDiv.innerHTML = '';
+  listDiv.innerHTML = '<h3>Daily Chores</h3>';
   
   let totalPts = 0;
+  
+  // Render Chores (Add points)
   chores.forEach(c => {
     const isDone = doneList.includes(c.id);
     if (isDone) totalPts += c.pts;
@@ -100,9 +111,27 @@ function render() {
     listDiv.appendChild(div);
   });
 
-  const totalMinutes = Math.floor(totalPts / 20);
+  // Render Penalties (Subtract points)
+  listDiv.innerHTML += '<h3>Penalties</h3>';
+  penalties.forEach(p => {
+    const isApplied = penaltyList.includes(p.id);
+    if (isApplied) totalPts -= p.pts;
+    
+    const div = document.createElement('div');
+    div.className = `card ${isApplied ? 'done' : ''}`;
+    div.style.borderColor = isApplied ? '#d32f2f' : '#ddd'; // Red border for penalty
+    div.innerHTML = `<strong>${p.title}</strong><span style="margin-left:auto">-${p.pts} pts</span>`;
+    div.onclick = () => {
+      const newList = isApplied ? penaltyList.filter(id => id !== p.id) : [...penaltyList, p.id];
+      localStorage.setItem(`penaltyList_${currentUser}`, JSON.stringify(newList));
+      render();
+    };
+    listDiv.appendChild(div);
+  });
+
+  const totalMinutes = Math.max(0, Math.floor(totalPts / 20)); // Ensure minutes don't go negative
   document.getElementById('game-time').textContent = totalMinutes + " Minutes Earned";
-  document.getElementById('points-text').textContent = totalPts + " points (" + (totalPts / 20).toFixed(1) + " minutes)";
+  document.getElementById('points-text').textContent = totalPts + " total points";
 }
 </script>
 </body>
