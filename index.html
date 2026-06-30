@@ -50,7 +50,7 @@ const penalties = [
   { id: 101, title: 'Talking Back', pts: 5 },
   { id: 102, title: 'Fighting', pts: 5 },
   { id: 103, title: 'Hitting or Throwing Items', pts: 5 },
-  { id: 104, title: 'Not listening', pts: 5 },  
+  { id: 104, title: 'Not listening', pts: 5 },
   { id: 105, title: 'Incomplete Daily Chores', pts: 5 }
 ];
 
@@ -73,10 +73,8 @@ function checkDate() {
   const monday = new Date(now);
   monday.setDate(now.getDate() - diff);
   monday.setHours(0, 0, 0, 0);
-  
   const mondayString = monday.toDateString();
   const lastMondayKey = `lastMonday_${currentUser}`;
-  
   if (localStorage.getItem(lastMondayKey) !== mondayString) {
     localStorage.setItem(`doneList_${currentUser}`, JSON.stringify([]));
     localStorage.setItem(`penaltyList_${currentUser}`, JSON.stringify([]));
@@ -98,11 +96,11 @@ function render() {
     const div = document.createElement('div');
     div.className = `card ${isDone ? 'done' : ''}`;
     div.innerHTML = `<strong>${c.title}</strong><span style="margin-left:auto">${c.pts} pts</span>`;
-    div.onclick = () => {
+    div.addEventListener('click', () => {
       const newList = isDone ? doneList.filter(id => id !== c.id) : [...doneList, c.id];
       localStorage.setItem(`doneList_${currentUser}`, JSON.stringify(newList));
       render();
-    };
+    });
     listDiv.appendChild(div);
   });
 
@@ -114,11 +112,11 @@ function render() {
     div.className = `card ${isApplied ? 'done' : ''}`;
     div.style.borderColor = isApplied ? '#d32f2f' : '#ddd';
     div.innerHTML = `<strong>${p.title}</strong><span style="margin-left:auto">-${p.pts} pts</span>`;
-    div.onclick = () => {
+    div.addEventListener('click', () => {
       const newList = isApplied ? penaltyList.filter(id => id !== p.id) : [...penaltyList, p.id];
       localStorage.setItem(`penaltyList_${currentUser}`, JSON.stringify(newList));
       render();
-    };
+    });
     listDiv.appendChild(div);
   });
 
