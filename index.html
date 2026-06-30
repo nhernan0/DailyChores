@@ -59,11 +59,23 @@ function setUser(name) {
 }
 
 function checkDate() {
-  const today = new Date().toDateString();
-  const lastDateKey = `lastDate_${currentUser}`;
-  if (localStorage.getItem(lastDateKey) !== today) {
+  const now = new Date();
+  // Get current day of week (0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat)
+  const day = now.getDay();
+  // Calculate how many days back to the most recent Monday
+  // If today is Monday (1), diff is 0. If Sunday (0), diff is 6.
+  const diff = (day === 0 ? 6 : day - 1);
+  
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - diff);
+  monday.setHours(0, 0, 0, 0);
+  
+  const mondayString = monday.toDateString();
+  const lastMondayKey = `lastMonday_${currentUser}`;
+  
+  if (localStorage.getItem(lastMondayKey) !== mondayString) {
     localStorage.setItem(`doneList_${currentUser}`, JSON.stringify([]));
-    localStorage.setItem(lastDateKey, today);
+    localStorage.setItem(lastMondayKey, mondayString);
   }
 }
 
