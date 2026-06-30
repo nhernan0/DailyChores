@@ -36,14 +36,15 @@ const chores = [
   { id: 4, title: 'Exercise: 20-30 minutes', pts: 15 },
   { id: 5, title: '30 Minutes of Reading', pts: 10 },
   { id: 6, title: 'Arts and Crafts Activity', pts: 5 },
-  { id: 7, title: 'Math Activity', pts: 5 },
-  { id: 8, title: 'Language Arts Activity', pts: 5 },
+  { id: 7, title: 'Math Activity', pts: 6 },
+  { id: 8, title: 'Language Arts or Writing Activity', pts: 6 },
   { id: 9, title: 'Science Activity', pts: 5 },
   { id: 10, title: 'Social Studies Activity', pts: 5 },
   { id: 11, title: 'Religious Ed Activity', pts: 5 },
-  { id: 12, title: 'Wash/Dry Dishes', pts: 5 },
-  { id: 13, title: 'Check/Change Trash', pts: 4 },
-  { id: 14, title: 'Pick Up Toys at end of Day', pts: 10 }
+  { id: 12, title: 'Wash/Dry Dishes', pts: 4 },
+  { id: 13, title: 'Check/Change Trash', pts: 3 },
+  { id: 14, title: 'Calmly Expressing Feelings/Frustrations', pts: 5 },
+  { id: 15, title: 'Pick Up Toys at end of Day', pts: 5 }
 ];
 
 const penalties = [
@@ -92,7 +93,7 @@ function render() {
 
   // Add Chores Title
   const choreTitle = document.createElement('h3');
-  choreTitle.textContent = 'Daily Chores';
+  choreTitle.textContent = 'Daily Activities';
   listDiv.appendChild(choreTitle);
   
   let totalPts = 0;
