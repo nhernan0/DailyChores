@@ -86,7 +86,14 @@ function render() {
   const doneList = JSON.parse(localStorage.getItem(`doneList_${currentUser}`) || '[]');
   const penaltyList = JSON.parse(localStorage.getItem(`penaltyList_${currentUser}`) || '[]');
   const listDiv = document.getElementById('chore-list');
-  listDiv.innerHTML = '<h3>Daily Chores</h3>';
+  
+  // Clear only the content, not the container
+  listDiv.innerHTML = ''; 
+
+  // Add Chores Title
+  const choreTitle = document.createElement('h3');
+  choreTitle.textContent = 'Daily Chores';
+  listDiv.appendChild(choreTitle);
   
   let totalPts = 0;
   
@@ -96,6 +103,8 @@ function render() {
     const div = document.createElement('div');
     div.className = `card ${isDone ? 'done' : ''}`;
     div.innerHTML = `<strong>${c.title}</strong><span style="margin-left:auto">${c.pts} pts</span>`;
+    
+    // Use a standard click listener
     div.addEventListener('click', () => {
       const newList = isDone ? doneList.filter(id => id !== c.id) : [...doneList, c.id];
       localStorage.setItem(`doneList_${currentUser}`, JSON.stringify(newList));
@@ -104,7 +113,11 @@ function render() {
     listDiv.appendChild(div);
   });
 
-  listDiv.innerHTML += '<h3>Penalties</h3>';
+  // Add Penalties Title
+  const penaltyTitle = document.createElement('h3');
+  penaltyTitle.textContent = 'Penalties';
+  listDiv.appendChild(penaltyTitle);
+
   penalties.forEach(p => {
     const isApplied = penaltyList.includes(p.id);
     if (isApplied) totalPts -= p.pts;
@@ -112,6 +125,7 @@ function render() {
     div.className = `card ${isApplied ? 'done' : ''}`;
     div.style.borderColor = isApplied ? '#d32f2f' : '#ddd';
     div.innerHTML = `<strong>${p.title}</strong><span style="margin-left:auto">-${p.pts} pts</span>`;
+    
     div.addEventListener('click', () => {
       const newList = isApplied ? penaltyList.filter(id => id !== p.id) : [...penaltyList, p.id];
       localStorage.setItem(`penaltyList_${currentUser}`, JSON.stringify(newList));
