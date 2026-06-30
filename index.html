@@ -28,12 +28,11 @@
 <div id="chore-list"></div>
 
 <script>
-// 1. DEFINE YOUR CHORES HERE
 const chores = [
   { id: 1, title: 'Brush Teeth', pts: 2 },
   { id: 2, title: 'Brush Hair', pts: 2 },
   { id: 3, title: 'Change Clothes', pts: 2 },
-  { id: 4, title: 'Exercise: 20-30 miuntes', pts: 15 },
+  { id: 4, title: 'Exercise: 20-30 minutes', pts: 15 },
   { id: 5, title: '30 Minutes of Reading', pts: 10 },
   { id: 6, title: 'Arts and Crafts Activity', pts: 5 },
   { id: 7, title: 'Math Activity', pts: 5 },
@@ -46,7 +45,7 @@ const chores = [
   { id: 14, title: 'Pick Up Toys at end of Day', pts: 10 }
 ];
 
-  const penalties = [
+const penalties = [
   { id: 101, title: 'Talking Back', pts: 5 },
   { id: 102, title: 'Fighting', pts: 5 },
   { id: 103, title: 'Hitting or Throwing Items', pts: 5 },
@@ -68,12 +67,8 @@ function setUser(name) {
 
 function checkDate() {
   const now = new Date();
-  // Get current day of week (0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat)
   const day = now.getDay();
-  // Calculate how many days back to the most recent Monday
-  // If today is Monday (1), diff is 0. If Sunday (0), diff is 6.
   const diff = (day === 0 ? 6 : day - 1);
-  
   const monday = new Date(now);
   monday.setDate(now.getDate() - diff);
   monday.setHours(0, 0, 0, 0);
@@ -83,23 +78,22 @@ function checkDate() {
   
   if (localStorage.getItem(lastMondayKey) !== mondayString) {
     localStorage.setItem(`doneList_${currentUser}`, JSON.stringify([]));
+    localStorage.setItem(`penaltyList_${currentUser}`, JSON.stringify([]));
     localStorage.setItem(lastMondayKey, mondayString);
   }
 }
 
 function render() {
   const doneList = JSON.parse(localStorage.getItem(`doneList_${currentUser}`) || '[]');
-  const penaltyList = JSON.parse(localStorage.getItem(`penaltyList_${currentUser}`) || '[]'); // New
+  const penaltyList = JSON.parse(localStorage.getItem(`penaltyList_${currentUser}`) || '[]');
   const listDiv = document.getElementById('chore-list');
   listDiv.innerHTML = '<h3>Daily Chores</h3>';
   
   let totalPts = 0;
   
-  // Render Chores (Add points)
   chores.forEach(c => {
     const isDone = doneList.includes(c.id);
     if (isDone) totalPts += c.pts;
-    
     const div = document.createElement('div');
     div.className = `card ${isDone ? 'done' : ''}`;
     div.innerHTML = `<strong>${c.title}</strong><span style="margin-left:auto">${c.pts} pts</span>`;
@@ -111,15 +105,13 @@ function render() {
     listDiv.appendChild(div);
   });
 
-  // Render Penalties (Subtract points)
   listDiv.innerHTML += '<h3>Penalties</h3>';
   penalties.forEach(p => {
     const isApplied = penaltyList.includes(p.id);
     if (isApplied) totalPts -= p.pts;
-    
     const div = document.createElement('div');
     div.className = `card ${isApplied ? 'done' : ''}`;
-    div.style.borderColor = isApplied ? '#d32f2f' : '#ddd'; // Red border for penalty
+    div.style.borderColor = isApplied ? '#d32f2f' : '#ddd';
     div.innerHTML = `<strong>${p.title}</strong><span style="margin-left:auto">-${p.pts} pts</span>`;
     div.onclick = () => {
       const newList = isApplied ? penaltyList.filter(id => id !== p.id) : [...penaltyList, p.id];
@@ -129,7 +121,7 @@ function render() {
     listDiv.appendChild(div);
   });
 
-  const totalMinutes = Math.max(0, Math.floor(totalPts / 20)); // Ensure minutes don't go negative
+  const totalMinutes = Math.max(0, Math.floor(totalPts / 20));
   document.getElementById('game-time').textContent = totalMinutes + " Minutes Earned";
   document.getElementById('points-text').textContent = totalPts + " total points";
 }
